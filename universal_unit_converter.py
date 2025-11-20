@@ -51,7 +51,8 @@ while go_on == True:
             unit_1 = input("Choose the initial unit: ")
             unit_2 = input("Choose the result unit: ")
             try:
-                if unit_1 in ["km", "m", "cm", "mm", "inches"]  and unit_2 in ["km", "m", "cm", "mm", "inches"]:
+                if (unit_1 in ["km", "m", "cm", "mm", "inches"] 
+                    and unit_2 in ["km", "m", "cm", "mm", "inches"]):
                     try:
                         value = float(input(f"Insert a value in {unit_1}: "))
                         result = Conversion(unit_1, unit_2, value)
@@ -71,7 +72,8 @@ while go_on == True:
             unit_1 = input("Choose the initial unit: ")
             unit_2 = input("Choose the result unit: ")
             try:
-                if unit_1 in ["kg", "g", "mg", "lbs", "oz"] and unit_2 in ["kg", "g", "mg", "lbs", "oz"]:
+                if (unit_1 in ["kg", "g", "mg", "lbs", "oz"] 
+                    and unit_2 in ["kg", "g", "mg", "lbs", "oz"]):
                     try:
                         value = float(input(f"Insert a value in {unit_1}: "))
                         result = Conversion(unit_1, unit_2, value)
@@ -88,7 +90,7 @@ while go_on == True:
             
 
     x = input("Do you want to continue?(Y/n) ")
-    if x == "n" or " n" or "n " or "N":
+    if x in ["n", " n", "n ", "N", " N", "N "]:
         print("Bye, see you soon!")
         go_on = False
     else:

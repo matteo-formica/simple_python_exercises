@@ -22,6 +22,8 @@ while go_on == True:
     converts_degree()
     
     x = input("Do you want to convert another number?(Y/n) ")
-    if x == "n":
+    if x in ["n", " n", "n ", "N", " N", "N "]:
         print("Bye, see you soon!")
         go_on = False
+    else:
+        continue

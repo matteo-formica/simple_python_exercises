@@ -182,8 +182,9 @@ while go_on == True:
                     input("press enter to continue..")
 
     x = input("Do you want to continue?(Y/n) ")   
-    if x == "n" or "N" or " n" or "n ":
+    if x in ["n", " n", "n ", "N", " N", "N "]:
+        print("Bye, see you soon!")
         go_on = False
     else:
-        continue              
+        continue             
                             
