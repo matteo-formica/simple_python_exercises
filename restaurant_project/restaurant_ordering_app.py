@@ -20,7 +20,7 @@ class Customer:
 
     
 class Restaurant:
-    def __init__(self, name, address, passwd, menu={}, customers=[], orders=[], totalincome = 0.0):
+    def __init__(self, name, address, passwd, menu={}, customers=[], orders=[], totalincome = 0.0, totalorders=0):
         self.name = name
         self.address = address
         self.menu = menu
@@ -28,6 +28,7 @@ class Restaurant:
         self.orders = orders
         self.passwd = passwd
         self.totalincome = totalincome
+        self.totalorders = totalorders
     
     def initialize(self):
         self.menu = {}
@@ -36,7 +37,9 @@ class Restaurant:
         self.totalincome = 0
         with open("restaurant_project/restaurant.txt", 'r') as f:
             for line in f.readlines():
-                self.totalincome += float(line)
+                income, ordernum = line.split(',')
+                self.totalincome = float(income)
+                self.totalorders = int(ordernum.strip('\n'))
         with open("restaurant_project/menu.txt") as f:
             for line in f.readlines():
                 string = line
@@ -49,13 +52,19 @@ class Restaurant:
                 customer = Customer(name, address, int(id))
                 self.customers.append(customer)
         with open("restaurant_project/orders.txt") as f:
+            self.totalorders = 0
+            self.totalincome = 0.0
             for line in f.readlines():
+                self.totalorders += 1
                 string = line
                 name, id, price, dishes, completed = string.split(',')
                 dish = list(dishes.split(';'))
                 order = Order(name, int(id), dish, float(price), completed.strip("\n"))
                 self.orders.append(order)
-
+                self.totalincome += float(price)
+                with open("restaurant_project/restaurant.txt", 'w') as f:
+                    f.write(str(self.totalincome) + ',' + str(self.totalorders) + '\n')
+            
     def add_dish(self):
         key = input("What's the dish's name? ").strip().title()
         value = str(round(float(input("What's the dish's price? ").strip()), 2))
@@ -160,6 +169,7 @@ def restaurant_side(passwd):
                 case 1:
                     print(f"Restaurant name: {restaurant.name}")
                     print(f"Restaurant address: {restaurant.address}")
+                    print(f"Statistics: Total income: ${restaurant.totalincome} | Total orders : {restaurant.totalorders}")
                     q = input("Press any key to return to menu")
                 case 2:
                     for customer in restaurant.customers:
