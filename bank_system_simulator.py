@@ -79,7 +79,7 @@ def ATM():
             case "3":
                 sender_num = int(input("From which account number do you send: ").strip())
                 receiver_num = int(input("Which account number will receive the money: ").strip())
-                amnt = int(input("How much $ do you want to send? ").strip())
+                amnt = float(input("How much $ do you want to send? ").strip()).round(2)
                 for account in Intesa.account_database:
                     if account.account_number != sender_num:
                         continue
@@ -94,7 +94,7 @@ def ATM():
                 q = input("Press any key to return to menu")
             case "4":
                 account_num = int(input("write a valid account number to deposit: ").strip())
-                amnt = int(input("How much $ do you want to Deposit? ").strip())
+                amnt = float(input("How much $ do you want to Deposit? ").strip()).round(2)
                 for account in Intesa.account_database:
                     if account.account_number != account_num:
                         continue
@@ -104,7 +104,7 @@ def ATM():
                         q = input("Press any key to return to menu")
             case "5":
                 account_num = int(input("write a valid account number to withdraw: ").strip())
-                amnt = int(input("How much $ do you want to Withdraw? ").strip())
+                amnt = float(input("How much $ do you want to Withdraw? ").strip()).round(2)
                 for account in Intesa.account_database:
                     if account.account_number != account_num:
                         continue
