@@ -1,10 +1,9 @@
 class Order:
-    def __init__(self,customer_name, customer_id, restaurant, dishes=[], price=0.0, completed=False):
+    def __init__(self,customer_name, customer_id, dishes=[], price=0.0, completed="False"):
         self.customer_name = customer_name
         self.customer_id = customer_id
-        self.restaurant = restaurant
         self.dishes = dishes
-        self.price = price
+        self.price = round(float(price), 2)
         self.completed = completed
         
 
@@ -28,29 +27,56 @@ class Restaurant:
         self.customers = customers
         self.orders = orders
         self.passwd = passwd
+    
+    def initialize(self):
+        self.menu = {}
+        self.customers = []
+        self.orders = []
+        with open("restaurant_project/menu.txt") as f:
+            for line in f.readlines():
+                string = line
+                key, value = string.split(",")                   
+                self.menu[key] = float(value)
+        with open("restaurant_project/customers.txt") as f:
+            for line in f.readlines():
+                string = line
+                name, address, id = string.split(',')
+                customer = Customer(name, address, int(id))
+                self.customers.append(customer)
+        with open("restaurant_project/orders.txt") as f:
+            for line in f.readlines():
+                string = line
+                name, id, price, dishes, completed = string.split(',')
+                dish = list(dishes.split(';'))
+                order = Order(name, int(id), dish, float(price), completed.strip("\n"))
+                self.orders.append(order)
 
     def add_dish(self):
-        key = input("What's the dish's name? ").strip()
-        value = float(input("What's the dish's price? ").strip())
-        self.menu[key] = value
+        key = input("What's the dish's name? ").strip().title()
+        value = str(round(float(input("What's the dish's price? ").strip()), 2))
+        with open("restaurant_project/menu.txt", 'a') as f:
+            f.write(key + "," + value + "\n")
+        self.initialize()
 
     def add_customer(self):
         name = input("Customer's name: ").strip().title()
         address = input("Customer's address: ").strip().title()
         id = int(len(self.customers) + 1)
-        customer = Customer(name, address, id)
-        self.customers.append(customer)
+        with open("restaurant_project/customers.txt", 'a') as f:
+            f.write(name + ',' + address + ',' + str(id) + "\n")
+        self.initialize()
 
-    def take_order(self):
-        id = int(input("Write your ID: ").strip())
+    def take_order(self, idn):
+        id = idn
         for customer in self.customers:
             if id != customer.id:
                 continue
             else:
-                order = Order(customer.name, customer.id, self.name)
+                order = Order(customer.name, customer.id)
+                order.dishes = []
         completed = False
         while not completed:
-            dish = input("choose a dish: ")
+            dish = input("choose a dish: ").title()
             for key in self.menu.keys():
                 if dish != key:
                     continue
@@ -64,21 +90,29 @@ class Restaurant:
                 if confirm != "y":
                     continue
                 else:
-                    self.orders.append(order)
+                    with open("restaurant_project/orders.txt", 'a') as f:
+                        f.write(order.customer_name + ',' + str(order.customer_id) + ',' + str(order.price) + ',' + ";".join(order.dishes) + ',' + order.completed + '\n')
                     for customer in self.customers:
                         if id == customer.id:
                             customer.past_orders.append(order)
                     print("Order submitted successfully!")
-                    completed = True
-        
+                    completed = "True"
+                    self.initialize()
+
+    def update_order(self):
+        with open("restaurant_project/orders.txt", 'w') as f:
+            for order in self.orders:
+                f.write(order.customer_name + ',' + str(order.customer_id) + ',' + str(order.price) + ',' + ";".join(order.dishes) + ',' + order.completed + '\n')
+        self.initialize()
+
     def manage_orders(self):
         if len(self.orders) == 0:
             print("There are no orders here!")
             q = input("Press any key to return to menu")
         else:
             for order in self.orders:
-                if not order.completed:
-                    i = 1
+                i = 1
+                if order.completed != "True":
                     print(f"Orders n°{i} of ID n°{order.customer_id}, Customer name: {order.customer_name}")
                     for dish in order.dishes:
                         print(f"1x {dish}")
@@ -86,8 +120,9 @@ class Restaurant:
                     completed = input("Do you want to set this order as completed?(y/n) ").strip().lower()
                     if completed == "y":
                         print(f"Order n°{i} completed!")
-                        order.completed = True
-                    i += 1
+                        order.completed = "True"
+                        self.update_order()
+                i += 1
             print("You've reached the end of order's list")
             q = input("Press any key to return to menu")
 
@@ -109,8 +144,8 @@ def restaurant_side(passwd):
             print("6. Return to side selection")
             print()
             print("------------------------------")
-            select = int(input("Choose an option").strip())
-            if not select == [1, 2, 3, 4, 5, 6]:
+            select = int(input("Choose an option: ").strip())
+            if select not in [1, 2, 3, 4, 5, 6]:
                 print("Invalid selection")
                 continue
             match select:
@@ -142,8 +177,8 @@ def customer_side(id):
         print("4. Return to side selection")
         print()
         print("------------------------------")
-        select = int(input("Choose an option").strip())
-        if not select == [1, 2, 3, 4]:
+        select = int(input("Choose an option: ").strip())
+        if select not in [1, 2, 3, 4]:
             print("Invalid selection")
             continue
         match select:
@@ -163,7 +198,7 @@ def customer_side(id):
                     print(f"- {dish}: ${price}")
                 q = input("Press any key to return to menu")
             case 3:
-                restaurant.take_order()
+                restaurant.take_order(id)
             case 4:
                 break
 
@@ -177,8 +212,8 @@ def side_selection():
         print("3. Quit")
         print()
         print("------------------------------")
-        select = int(input("Choose an option").strip())
-        if not select == [1, 2, 3]:
+        select = int(input("Choose an option: ").strip())
+        if select not in [1, 2, 3]:
             print("Invalid selection")
             continue
         elif select == 1:
@@ -193,6 +228,7 @@ def side_selection():
 
 
 def main():
+    restaurant.initialize()
     side_selection()
 
 

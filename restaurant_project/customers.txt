@@ -1,0 +1,3 @@
+Giovanni,Via Roma 1,1
+Franca,Via Aspricolli 43,2
+Lucia,Strada Casale 12,3

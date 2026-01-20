@@ -1,0 +1,2 @@
+Giovanni,1,18.0,Pizza;Fish,True
+Franca,2,10.0,Fish,True
