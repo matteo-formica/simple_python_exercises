@@ -20,18 +20,23 @@ class Customer:
 
     
 class Restaurant:
-    def __init__(self, name, address, passwd, menu={}, customers=[], orders=[]):
+    def __init__(self, name, address, passwd, menu={}, customers=[], orders=[], totalincome = 0.0):
         self.name = name
         self.address = address
         self.menu = menu
         self.customers = customers
         self.orders = orders
         self.passwd = passwd
+        self.totalincome = totalincome
     
     def initialize(self):
         self.menu = {}
         self.customers = []
         self.orders = []
+        self.totalincome = 0
+        with open("restaurant_project/restaurant.txt", 'r') as f:
+            for line in f.readlines():
+                self.totalincome += float(line)
         with open("restaurant_project/menu.txt") as f:
             for line in f.readlines():
                 string = line
@@ -90,6 +95,9 @@ class Restaurant:
                 if confirm != "y":
                     continue
                 else:
+                    self.totalincome += order.price
+                    with open("restaurant_project/restaurant.txt", 'w') as f:
+                        f.write(str(self.totalincome))
                     with open("restaurant_project/orders.txt", 'a') as f:
                         f.write(order.customer_name + ',' + str(order.customer_id) + ',' + str(order.price) + ',' + ";".join(order.dishes) + ',' + order.completed + '\n')
                     for customer in self.customers:
