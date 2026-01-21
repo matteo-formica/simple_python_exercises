@@ -1,4 +1,7 @@
 Giovanni,1,18.0,Pizza;Fish,True
 Franca,2,10.0,Fish,True
-Franca,2,8.0,Pizza,False
+Franca,2,8.0,Pizza,True
 Franca,2,24.0,Pizza;Pizza;Pizza,False
+Lucia,3,18.0,Fish;Pizza,False
+Franca,2,10.0,Fish,False
+Giovanni,1,10.0,Fish,False

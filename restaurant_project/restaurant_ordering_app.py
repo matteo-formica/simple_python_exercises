@@ -34,12 +34,8 @@ class Restaurant:
         self.menu = {}
         self.customers = []
         self.orders = []
-        self.totalincome = 0
-        with open("restaurant_project/restaurant.txt", 'r') as f:
-            for line in f.readlines():
-                income, ordernum = line.split(',')
-                self.totalincome = float(income)
-                self.totalorders = int(ordernum.strip('\n'))
+        self.totalincome = 0.0
+        self.totalorders = 0
         with open("restaurant_project/menu.txt") as f:
             for line in f.readlines():
                 string = line
@@ -64,6 +60,12 @@ class Restaurant:
                 self.totalincome += float(price)
                 with open("restaurant_project/restaurant.txt", 'w') as f:
                     f.write(str(self.totalincome) + ',' + str(self.totalorders) + '\n')
+        with open("restaurant_project/restaurant.txt", 'r') as f:
+            for line in f.readlines():
+                string = line
+                income, ordernum = string.split(',')
+                self.totalincome = float(income)
+                self.totalorders = int(ordernum.strip('\n'))
             
     def add_dish(self):
         key = input("What's the dish's name? ").strip().title()
